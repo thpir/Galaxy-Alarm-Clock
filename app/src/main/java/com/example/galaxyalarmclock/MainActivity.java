@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Create full screen view
         decorView = getWindow().getDecorView();
         decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
@@ -36,9 +37,11 @@ public class MainActivity extends AppCompatActivity {
                     decorView.setSystemUiVisibility(hideSystemBars());
             }
         });
+        //Create full screen view
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); //Keep the screen on when activity is active
 
+        //Display actual time and date
         Handler handler=new Handler();
         handler.post(new Runnable(){
             @Override
@@ -51,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
                 handler.postDelayed(this,500); // set time here to refresh textView
             }
         });
+        //Display actual time and date
 
+        //Toggle between backgrounds when tapping screen
         button = findViewById(R.id.backgroundChange);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 toggleBackground();
             }
         });
+        //Toggle between backgrounds when tapping screen
 
     }
 
