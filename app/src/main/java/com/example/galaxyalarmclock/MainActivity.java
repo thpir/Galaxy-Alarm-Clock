@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -41,20 +42,20 @@ public class MainActivity extends AppCompatActivity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); //Keep the screen on when activity is active
 
-        //Display actual time and date
+        //Display actual time and date with a specific font
         Handler handler=new Handler();
         handler.post(new Runnable(){
             @Override
             public void run() {
                 TextView clockDisplay = findViewById(R.id.clock);
-                Typeface face = Typeface.createFromAsset(getAssets(),"fonts/atomicclockradio.ttf");
+                Typeface face = Typeface.createFromAsset(getAssets(),"fonts/alarmclock.ttf");
                 clockDisplay.setTypeface(face);
                 String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
                 clockDisplay.setText(currentDateTimeString);
                 handler.postDelayed(this,500); // set time here to refresh textView
             }
         });
-        //Display actual time and date
+        //Display actual time and date with a specific font
 
         //Toggle between backgrounds when tapping screen
         button = findViewById(R.id.backgroundChange);
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //Toggle between backgrounds when tapping screen
+
+        Toast.makeText(getApplication(), "Tap screen to change background", Toast.LENGTH_LONG).show();
 
     }
 
