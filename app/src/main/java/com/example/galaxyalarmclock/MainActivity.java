@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); //Keep the screen on when activity is active
 
-        //Display actual time and date with a specific font
+        //Display actual time with a specific font
         Handler handler=new Handler();
         handler.post(new Runnable(){
             @Override
@@ -50,12 +50,25 @@ public class MainActivity extends AppCompatActivity {
                 TextView clockDisplay = findViewById(R.id.clock);
                 Typeface face = Typeface.createFromAsset(getAssets(),"fonts/alarmclock.ttf");
                 clockDisplay.setTypeface(face);
-                String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
-                clockDisplay.setText(currentDateTimeString);
+                String currentTimeString = java.text.DateFormat.getTimeInstance().format(new Date());
+                clockDisplay.setText(currentTimeString);
                 handler.postDelayed(this,500); // set time here to refresh textView
             }
         });
-        //Display actual time and date with a specific font
+
+        //Display actual date with a specific font
+        Handler handler2=new Handler();
+        handler.post(new Runnable(){
+            @Override
+            public void run() {
+                TextView dateDisplay = findViewById(R.id.displayDate);
+                Typeface face = Typeface.createFromAsset(getAssets(),"fonts/alarmclock.ttf");
+                dateDisplay.setTypeface(face);
+                String currentDateString = java.text.DateFormat.getDateInstance().format(new Date());
+                dateDisplay.setText(currentDateString);
+                handler2.postDelayed(this,500); // set time here to refresh textView
+            }
+        });
 
         //Toggle between backgrounds when tapping screen
         button = findViewById(R.id.backgroundChange);
@@ -183,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //When the screen orientation changes we want to keep the selected background. onSavaInstaceState and onRestoreInstanceState enable this.
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
