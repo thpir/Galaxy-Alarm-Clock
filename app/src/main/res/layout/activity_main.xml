@@ -13,7 +13,7 @@
         android:src="@drawable/black"
         android:scaleType="centerCrop" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -38,7 +38,7 @@
             android:background="@android:color/transparent"
             android:textColor="@android:color/holo_red_dark"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <Button
         android:layout_width="match_parent"

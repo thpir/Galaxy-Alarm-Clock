@@ -1,25 +1,31 @@
 package com.example.galaxyalarmclock;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean switch1OnOff;
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String SWITCH1 = "switch1";
+
     Button button;
-    int backgroundNumber = 0;
+    int i = 0;
+    int backgroundNumber = 1;
     int memorizedNumber = 0;
 
     private View decorView;
@@ -28,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);;
+        switch1OnOff = sharedPreferences.getBoolean(SWITCH1, false);
 
         //Create full screen view
         decorView = getWindow().getDecorView();
@@ -38,12 +47,12 @@ public class MainActivity extends AppCompatActivity {
                     decorView.setSystemUiVisibility(hideSystemBars());
             }
         });
-        //Create full screen view
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); //Keep the screen on when activity is active
+        //Keep the screen on when activity is active
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         //Display actual time with a specific font
-        Handler handler=new Handler();
+        Handler handler = new Handler();
         handler.post(new Runnable(){
             @Override
             public void run() {
@@ -57,31 +66,49 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Display actual date with a specific font
-        Handler handler2=new Handler();
-        handler.post(new Runnable(){
+
+        if(switch1OnOff) {
+            Handler handler2 = new Handler();
+            handler2.post(new Runnable(){
+                @Override
+                public void run() {
+                    TextView dateDisplay = findViewById(R.id.displayDate);
+                    Typeface face = Typeface.createFromAsset(getAssets(),"fonts/alarmclock.ttf");
+                    dateDisplay.setTypeface(face);
+                    String currentDateString = java.text.DateFormat.getDateInstance().format(new Date());
+                    dateDisplay.setText(currentDateString);
+                    handler2.postDelayed(this,500); // set time here to refresh textView
+                }
+            });
+        }
+
+        //third handler to enable single/double click function of screen button
+        Handler handler3 = new Handler();
+        handler3.post(new Runnable(){
             @Override
             public void run() {
-                TextView dateDisplay = findViewById(R.id.displayDate);
-                Typeface face = Typeface.createFromAsset(getAssets(),"fonts/alarmclock.ttf");
-                dateDisplay.setTypeface(face);
-                String currentDateString = java.text.DateFormat.getDateInstance().format(new Date());
-                dateDisplay.setText(currentDateString);
-                handler2.postDelayed(this,500); // set time here to refresh textView
+                if(i==1) {
+                    toggleBackground(); //if screen is clicked once, change the background
+                } else if(i==2) {
+                    openSettingsActivity();
+                }
+                i = 0;
+                handler3.postDelayed(this, 500); // set time here to refresh textView
             }
         });
 
-        //Toggle between backgrounds when tapping screen
+        //log no° of button clicks for single/double click feature
         button = findViewById(R.id.backgroundChange);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggleBackground();
+                i++;
             }
         });
-        //Toggle between backgrounds when tapping screen
 
-        Toast.makeText(getApplication(), "Tap screen to change background", Toast.LENGTH_LONG).show();
+        //Inform user to tap the background when they want to change the background image
+        Toast.makeText(getApplication(), "Tap screen to change background Double tab to open Settings", Toast.LENGTH_LONG).show();
 
     }
 
@@ -194,6 +221,11 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public void openSettingsActivity() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     //When the screen orientation changes we want to keep the selected background. onSavaInstaceState and onRestoreInstanceState enable this.
