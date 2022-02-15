@@ -1,6 +1,5 @@
 package com.example.galaxyalarmclock;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,11 +8,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.galaxyalarmclock.utils.SharedPreference;
 
 import java.util.ArrayList;
 
@@ -26,9 +22,6 @@ public class SettingsActivity extends AppCompatActivity {
     private ArrayList<BackgroundItem> mBackgroundList;
     private BackgroundAdapter mAdapter;
     private Spinner spinnerBackgrounds;
-
-    //private SharedPreference sharedPreference;
-    //Activity context = this;
 
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String SWITCH1 = "switch1";

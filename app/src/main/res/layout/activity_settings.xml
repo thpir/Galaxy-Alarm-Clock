@@ -23,10 +23,10 @@
         android:layout_marginRight="20sp"
         android:layout_below="@+id/spinner_backgrounds"
         android:gravity="left"
-        android:text="Display date"
-        android:textSize="20sp"
+        android:text="@string/switch1_text"
+        android:textSize="16sp"
         android:theme="@style/Theme.Switch"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
+        tools:ignore="RtlHardcoded,UseSwitchCompatOrMaterialXml" />
 
     <Button
         android:id="@+id/SaveSettings"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20sp"
-        android:text="Save Settings"/>
+        android:layout_marginBottom="16sp"
+        android:text="@string/button_save_settings_text"/>
 
 </RelativeLayout>

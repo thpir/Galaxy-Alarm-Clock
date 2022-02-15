@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Galaxy Alarm Clock</string>
+    <string name="switch1_text">Display date</string>
+    <string name="button_save_settings_text">Save Settings</string>
 </resources>
