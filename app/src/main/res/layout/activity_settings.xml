@@ -3,19 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     tools:context=".SettingsActivity">
+
+    <Spinner
+        android:id="@+id/spinner_backgrounds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"/>
 
     <Switch
         android:id="@+id/switch1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="20sp"
         android:layout_marginTop="20sp"
         android:layout_marginRight="20sp"
+        android:layout_below="@+id/spinner_backgrounds"
         android:gravity="left"
         android:text="Display date"
-        android:textColor="@android:color/holo_red_dark"
         android:textSize="20sp"
         android:theme="@style/Theme.Switch"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
@@ -27,8 +35,6 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20sp"
-        android:backgroundTint="#230d36"
-        android:textColor="@android:color/holo_red_dark"
         android:text="Save Settings"/>
 
 </RelativeLayout>

@@ -10,7 +10,7 @@
         android:id="@+id/backgroundPicture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/black"
+        android:src="@drawable/background01"
         android:scaleType="centerCrop" />
 
     <RelativeLayout

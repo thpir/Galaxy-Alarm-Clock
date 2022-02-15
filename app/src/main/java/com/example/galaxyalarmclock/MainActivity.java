@@ -19,24 +19,26 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Button button;
+    private View decorView;
     private boolean switch1OnOff;
+    private String background = "Background 1";
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String SWITCH1 = "switch1";
-
-    Button button;
-    int i = 0;
-    int backgroundNumber = 1;
-    int memorizedNumber = 0;
-
-    private View decorView;
+    public static final String BACKGROUND = "background";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);;
+        //Check the saved state of the settings
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         switch1OnOff = sharedPreferences.getBoolean(SWITCH1, false);
+        background = sharedPreferences.getString(BACKGROUND, "background");
+
+        //Select the saved background
+        toggleBackground();
 
         //Create full screen view
         decorView = getWindow().getDecorView();
@@ -66,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Display actual date with a specific font
-
         if(switch1OnOff) {
             Handler handler2 = new Handler();
             handler2.post(new Runnable(){
@@ -82,34 +83,19 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        //third handler to enable single/double click function of screen button
-        Handler handler3 = new Handler();
-        handler3.post(new Runnable(){
-            @Override
-            public void run() {
-                if(i==1) {
-                    toggleBackground(); //if screen is clicked once, change the background
-                } else if(i==2) {
-                    openSettingsActivity();
-                }
-                i = 0;
-                handler3.postDelayed(this, 500); // set time here to refresh textView
-            }
-        });
-
         //log no° of button clicks for single/double click feature
         button = findViewById(R.id.backgroundChange);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
-                i++;
+            public boolean onLongClick(View view) {
+                openSettingsActivity();
+                return true;
             }
         });
 
         //Inform user to tap the background when they want to change the background image
-        Toast.makeText(getApplication(), "Tap screen to change background Double tab to open Settings", Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getApplication(), "Long click on anywhere on screen to open settings", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -130,124 +116,48 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toggleBackground() {
-        if (backgroundNumber == 0) {
+        if (background.equals("Background 1")) {
 
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.black);
-            backgroundNumber++;
-            memorizedNumber = 0;
+            ImageView image = findViewById(R.id.backgroundPicture);
+            image.setImageResource(R.drawable.background01);
 
-        } else if (backgroundNumber == 1) {
+        } else if (background.equals("Background 2")) {
 
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.ag_carinae);
-            backgroundNumber++;
-            memorizedNumber = 1;
+            ImageView image = findViewById(R.id.backgroundPicture);
+            image.setImageResource(R.drawable.background02);
 
-        } else if (backgroundNumber == 2) {
+        } else if (background.equals("Background 3")) {
 
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.artists_illustration_of_vy_cma);
-            backgroundNumber++;
-            memorizedNumber = 2;
+            ImageView image = findViewById(R.id.backgroundPicture);
+            image.setImageResource(R.drawable.background03);
 
-        } else if (backgroundNumber == 3) {
+        } else if (background.equals("Background 4")) {
 
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.dark_rays_in_ic_5063);
-            backgroundNumber++;
-            memorizedNumber = 3;
+            ImageView image = findViewById(R.id.backgroundPicture);
+            image.setImageResource(R.drawable.background04);
 
-        } else if (backgroundNumber == 4) {
+        } else if (background.equals("Background 5")) {
 
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.double_quasars_illustration);
-            backgroundNumber++;
-            memorizedNumber = 4;
+            ImageView image = findViewById(R.id.backgroundPicture);
+            image.setImageResource(R.drawable.background05);
 
-        } else if (backgroundNumber == 5) {
+        } else if (background.equals("Background 6")) {
 
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.molten_ring_galaxy);
-            backgroundNumber++;
-            memorizedNumber = 5;
+            ImageView image = findViewById(R.id.backgroundPicture);
+            image.setImageResource(R.drawable.background06);
 
         } else {
 
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.ngc_6397);
-            backgroundNumber = 0;
-            memorizedNumber = 6;
+            ImageView image = findViewById(R.id.backgroundPicture);
+            image.setImageResource(R.drawable.background07);
 
         }
-    }
-
-    public void restoreBackground() {
-
-        if (memorizedNumber == 0) {
-
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.black);
-
-        } else if (memorizedNumber == 1) {
-
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.ag_carinae);
-
-        } else if (memorizedNumber == 2) {
-
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.artists_illustration_of_vy_cma);
-
-        } else if (memorizedNumber == 3) {
-
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.dark_rays_in_ic_5063);
-
-        } else if (memorizedNumber == 4) {
-
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.double_quasars_illustration);
-
-        } else if (memorizedNumber == 5) {
-
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.molten_ring_galaxy);
-
-        } else {
-
-            ImageView image = (ImageView) findViewById(R.id.backgroundPicture);
-            image.setImageResource(R.drawable.ngc_6397);
-
-        }
-
     }
 
     public void openSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
-
-    //When the screen orientation changes we want to keep the selected background. onSavaInstaceState and onRestoreInstanceState enable this.
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putInt("backgroundNumber", backgroundNumber);
-        outState.putInt("memorizedNumber", memorizedNumber);
-
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        backgroundNumber = savedInstanceState.getInt("backgroundNumber");
-        memorizedNumber = savedInstanceState.getInt("memorizedNumber");
-        restoreBackground();
-
-    }
-
 }
 
 
