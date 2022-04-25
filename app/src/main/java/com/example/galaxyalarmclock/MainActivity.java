@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                openSettingsActivity();
+                openToolsActivity();
                 return true;
             }
         });
@@ -154,8 +154,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void openSettingsActivity() {
-        Intent intent = new Intent(this, SettingsActivity.class);
+    public void openToolsActivity() {
+        Intent intent = new Intent(this, ToolsActivity.class);
         startActivity(intent);
     }
 }

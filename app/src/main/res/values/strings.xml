@@ -2,4 +2,11 @@
     <string name="app_name">Galaxy Alarm Clock</string>
     <string name="switch1_text">Display date</string>
     <string name="button_save_settings_text">Save Settings</string>
+    <string name="title_activity_tools">ToolsActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="tab_label1">Alarm</string>
+    <string name="tab_label2">Stopwatch</string>
+    <string name="tab_label3">Timer</string>
 </resources>

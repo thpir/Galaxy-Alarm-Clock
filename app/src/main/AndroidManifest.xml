@@ -10,13 +10,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GalaxyAlarmClock">
         <activity
-            android:name=".SettingsActivity"
+            android:name=".ToolsActivity"
             android:exported="false"
-            android:label="Settings"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.galaxyalarmclock.MainActivity"/>
+                android:value="com.example.galaxyalarmclock.MainActivity" />
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="Settings"
+            android:parentActivityName=".ToolsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.galaxyalarmclock.ToolsActivity" />
         </activity>
         <activity
             android:name=".MainActivity"
