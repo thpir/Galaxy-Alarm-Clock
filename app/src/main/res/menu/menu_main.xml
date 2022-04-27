@@ -5,6 +5,6 @@
         android:id="@+id/action_settings"
         android:orderInCategory="10"
         android:title="Settings"
-        android:icon="@drawable/settings_icon"
+        android:icon="@drawable/icon_settings"
         app:showAsAction="ifRoom"/>
 </menu>
