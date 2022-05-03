@@ -8,23 +8,29 @@ import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Chronometer;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.Switch;
 
 public class TabFragment2 extends Fragment{
 
     private long timeWhenStopped = 0;
     private boolean isRunning = false;
+    private boolean keepScreenOn = false;
     private View mView;
     private Chronometer mChronometer;
     private ImageButton mPlay;
     private ImageButton mReset;
+    private Switch mSwitch;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // restore instances
         if (savedInstanceState != null) {
+            keepScreenOn = savedInstanceState.getBoolean(getKeepScreenOn());
             isRunning = savedInstanceState.getBoolean(getIsRunningKey());
             setCurrentTime(savedInstanceState.getLong(getTimeKey()));
             timeWhenStopped = SystemClock.elapsedRealtime() - mChronometer.getBase();
@@ -39,6 +45,7 @@ public class TabFragment2 extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.tab_fragment2, container, false);
+        mSwitch = (Switch) mView.findViewById(R.id.switch2);
         mChronometer = (Chronometer) mView.findViewById(R.id.chronometer);
 
         // Reset chronometer after one hour or 3 600 000
@@ -66,6 +73,7 @@ public class TabFragment2 extends Fragment{
         }
         outState.putLong(getTimeKey(), getCurrentTime());
         outState.putBoolean(getIsRunningKey(), isRunning());
+        outState.putBoolean(getKeepScreenOn(), keepScreenOn());
     }
 
     private void configureImagebuttons() {
@@ -99,6 +107,19 @@ public class TabFragment2 extends Fragment{
                 mPlay.setImageResource(R.drawable.icon_play);
             }
         });
+
+        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    keepScreenOn = true;
+                    getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); //Activate screen always on
+                } else {
+                    keepScreenOn = false;
+                    getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); //Deactivate screen always on
+                }
+            }
+        });
     }
 
     private final String getTimeKey() {
@@ -109,12 +130,20 @@ public class TabFragment2 extends Fragment{
         return "KEY_TIMER_RUNNING" + getId();
     }
 
+    private final String getKeepScreenOn() {
+        return "KEEP_SCREEN_ON" + getId();
+    }
+
     public boolean isRunning() {
         return isRunning;
     }
 
     public long getCurrentTime() {
         return timeWhenStopped;
+    }
+
+    public boolean keepScreenOn() {
+        return keepScreenOn;
     }
 
     public void setCurrentTime(long time) {

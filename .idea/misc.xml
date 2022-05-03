@@ -11,6 +11,8 @@
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.312" />
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.312" />
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.312" />
+        <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/drawable/icon_delete.xml" value="0.1415" />
+        <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/drawable/icon_pause.xml" value="0.1415" />
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/layout/activity_main.xml" value="0.30885416666666665" />
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/layout/activity_settings.xml" value="0.30885416666666665" />
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/layout/activity_tools.xml" value="0.1" />
@@ -19,8 +21,8 @@
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/layout/fragment_home.xml" value="0.30885416666666665" />
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/layout/fragment_notifications.xml" value="0.30885416666666665" />
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/layout/tab_fragment1.xml" value="0.1" />
-        <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/layout/tab_fragment2.xml" value="0.1" />
-        <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/layout/tab_fragment3.xml" value="0.1" />
+        <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/layout/tab_fragment2.xml" value="0.22" />
+        <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/layout/tab_fragment3.xml" value="0.25" />
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/menu/menu_main.xml" value="0.1" />
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.32" />
       </map>

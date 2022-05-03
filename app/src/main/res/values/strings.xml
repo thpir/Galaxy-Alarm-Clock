@@ -9,4 +9,5 @@
     <string name="tab_label1">Alarm</string>
     <string name="tab_label2">Stopwatch</string>
     <string name="tab_label3">Timer</string>
+    <string name="switch2_text">Keep the screen on</string>
 </resources>

@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:id="@+id/tabFragment2"
+    android:background="@color/white"
     tools:context=".TabFragment2">
 
     <Chronometer
@@ -38,5 +39,17 @@
             android:background="@color/teal_700"/>
 
     </LinearLayout>
+
+    <Switch
+        android:id="@+id/switch2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20sp"
+        android:layout_marginTop="20sp"
+        android:layout_marginRight="20sp"
+        android:text="@string/switch2_text"
+        android:textSize="16sp"
+        android:theme="@style/Theme.Switch"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
 </LinearLayout>
