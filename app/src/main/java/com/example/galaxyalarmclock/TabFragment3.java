@@ -1,54 +1,43 @@
 package com.example.galaxyalarmclock;
 
-import android.media.Image;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
 import android.os.CountDownTimer;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethod;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Locale;
 
 public class TabFragment3 extends Fragment {
 
     private View mView;
-    private ImageButton mPlay;
-    private ImageButton mReset;
+    private ImageButton mButtonPlay;
+    private ImageButton mButtonReset;
+    private Button mButtonSet;
+    private EditText mEditTextInput;
     private TextView mTextviewCountdown;
     private CountDownTimer mCountDownTimer;
     private boolean mTimerRunning;
     private boolean keepScreenOn = false;
-    private static final long startTimeInMillis = 600000;
-    private long mTimeLeftInMillis = startTimeInMillis;
+    private long mStartTimeInMillis;
+    private long mTimeLeftInMillis = mStartTimeInMillis;
     private long mEndTime;
     private Switch mSwitch;
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // restore instances
-        if (savedInstanceState != null) {
-            keepScreenOn = savedInstanceState.getBoolean(getKeepScreenOn());
-            mTimeLeftInMillis = savedInstanceState.getLong(getMillisLeft());
-            mTimerRunning = savedInstanceState.getBoolean(getTimerRunning());
-            updateCountDownText();
-
-            if(mTimerRunning) {
-                mEndTime = savedInstanceState.getLong(getEndTime());
-                mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
-                startTimer();
-            }
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,27 +45,66 @@ public class TabFragment3 extends Fragment {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.tab_fragment3, container, false);
         mSwitch = (Switch) mView.findViewById(R.id.switch3);
-        mPlay = (ImageButton) mView.findViewById(R.id.imagebuttonPlay);
-        mReset = (ImageButton) mView.findViewById(R.id.imagebuttonReset);
+        mButtonPlay = (ImageButton) mView.findViewById(R.id.imagebuttonPlay);
+        mButtonReset = (ImageButton) mView.findViewById(R.id.imagebuttonReset);
+        mButtonSet = (Button) mView.findViewById(R.id.buttonSet);
+        mEditTextInput = (EditText) mView.findViewById(R.id.edittextInput);
         mTextviewCountdown = (TextView) mView.findViewById(R.id.textviewCountdown);
-        configureImagebuttons();
-        updateCountDownText();
+        configureButtonClicks();
+        //updateCountDownText(); is already called in onStart function
         return mView;
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // save instances
-        outState.putLong(getMillisLeft(), mTimeLeftInMillis());
-        outState.putBoolean(getTimerRunning(), mTimerRunning());
-        outState.putLong(getEndTime(), mEndTime());
-        outState.putBoolean(getKeepScreenOn(), keepScreenOn());
+    public void onStop() {
+        super.onStop();
+
+        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(getSharedPreferences(), Context.MODE_PRIVATE);
+        SharedPreferences.Editor mEditor = mSharedPreferences.edit();
+
+        mEditor.putLong("startTimeInMillis", mStartTimeInMillis);
+        mEditor.putLong(getMillisLeft(), mTimeLeftInMillis());
+        mEditor.putBoolean(getTimerRunning(), mTimerRunning());
+        mEditor.putLong(getEndTime(), mEndTime());
+        mEditor.putBoolean(getKeepScreenOn(), keepScreenOn());
+
+        mEditor.apply(); // save instances
+
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel(); // stop the countdown timer
+        }
     }
 
-    private void configureImagebuttons() {
+    @Override
+    public void onStart() {
+        super.onStart();
 
-        mPlay.setOnClickListener(new View.OnClickListener() {
+        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(getSharedPreferences(), Context.MODE_PRIVATE);
+
+        mStartTimeInMillis = mSharedPreferences.getLong("startTimeInMillis", 600000);
+        mTimeLeftInMillis = mSharedPreferences.getLong(getMillisLeft(), mStartTimeInMillis);
+        mTimerRunning = mSharedPreferences.getBoolean(getTimerRunning(), false);
+        keepScreenOn = mSharedPreferences.getBoolean(getKeepScreenOn(), false);
+
+        updateCountDownText();
+
+        if(mTimerRunning) {
+            mEndTime = mSharedPreferences.getLong(getEndTime(), 0);
+            mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
+
+            if (mTimeLeftInMillis < 0) {
+                mTimeLeftInMillis = 0;
+                mTimerRunning = false;
+                updateCountDownText();
+            } else {
+                startTimer();
+            }
+        }
+    }
+
+    private void configureButtonClicks() {
+
+        mButtonPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mTimerRunning) {
@@ -87,10 +115,32 @@ public class TabFragment3 extends Fragment {
             }
         });
 
-        mReset.setOnClickListener(new View.OnClickListener() {
+        mButtonReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 resetTimer();
+            }
+        });
+
+        mButtonSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String input = mEditTextInput.getText().toString();
+                if (input.length() == 0) {
+                    Toast.makeText(getActivity(), "Fill in any number of minutes", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                long millisInput = Long.parseLong(input) * 60000;
+
+                if (millisInput == 0) {
+                    Toast.makeText(getActivity(), "Please enter a positive number", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                resetTimer(); //if the timer is running we need to reset the running timer to set it to a new value
+                setTime(millisInput);
+                mEditTextInput.setText("");
             }
         });
 
@@ -120,19 +170,19 @@ public class TabFragment3 extends Fragment {
             @Override
             public void onFinish() {
                 mTimerRunning = false;
-                mPlay.setImageResource(R.drawable.icon_play);
+                mButtonPlay.setImageResource(R.drawable.icon_play);
                 resetTimer();
             }
         }.start();
 
         mTimerRunning = true;
-        mPlay.setImageResource(R.drawable.icon_pause);
+        mButtonPlay.setImageResource(R.drawable.icon_pause);
     }
 
     private void pauseTimer() {
         mCountDownTimer.cancel();
         mTimerRunning = false;
-        mPlay.setImageResource(R.drawable.icon_play);
+        mButtonPlay.setImageResource(R.drawable.icon_play);
     }
 
     private void resetTimer() {
@@ -140,15 +190,28 @@ public class TabFragment3 extends Fragment {
             mCountDownTimer.cancel();
         }
         mTimerRunning = false;
-        mTimeLeftInMillis = startTimeInMillis;
+        mTimeLeftInMillis = mStartTimeInMillis;
         updateCountDownText();
     }
 
+    private void setTime(long milliseconds) {
+        mStartTimeInMillis = milliseconds;
+        resetTimer();
+    }
+
     private void updateCountDownText() {
-        int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
+        int hours = (int) (mTimeLeftInMillis / 1000) / 3600;
+        int minutes = (int) ((mTimeLeftInMillis / 1000) % 3600) / 60;
         int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
 
-        String timeLeftFormatted = String.format(Locale.getDefault(),"%02d:%02d", minutes, seconds);
+        String timeLeftFormatted;
+        if (hours > 0) {
+            timeLeftFormatted = String.format(Locale.getDefault(),
+                    "%d:%02d:%02d", hours, minutes, seconds);
+        } else {
+            timeLeftFormatted = String.format(Locale.getDefault(),
+                    "%02d:%02d", minutes, seconds);
+        }
         mTextviewCountdown.setText(timeLeftFormatted);
     }
 
@@ -158,9 +221,9 @@ public class TabFragment3 extends Fragment {
 
     private final String getEndTime() {return "END_TIME" + getId();}
 
-    private final String getKeepScreenOn() {
-        return "KEEP_SCREEN_ON" + getId();
-    }
+    private final String getKeepScreenOn() {return "KEEP_SCREEN_ON" + getId();}
+
+    private final String getSharedPreferences() {return "GET_SHARED_PREFERENCES" + getId();}
 
     private long mTimeLeftInMillis() {return mTimeLeftInMillis;}
 
