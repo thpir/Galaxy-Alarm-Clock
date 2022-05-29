@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,19 +32,30 @@ public class TabFragment1 extends Fragment {
     private Calendar mCalendar;
     private AlarmManager mAlarmManager;
     private PendingIntent mPendingIntent;
+    private String selectedTime;
+
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String SELECTED_TIME = "selectedTime";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        loadData();
         mView = inflater.inflate(R.layout.tab_fragment1, container, false);
         mSetTime = (Button) mView.findViewById(R.id.buttonSelectTime);
         mSetAlarm = (Button) mView.findViewById(R.id.buttonSetAlarm);
         mCancelAlarm = (Button) mView.findViewById(R.id.buttonCancelAlarm);
         mSelectedTime = (TextView) mView.findViewById(R.id.textviewSelectedTime);
+        mSelectedTime.setText(selectedTime);
         createNotificationChannel();
         configureButtons();
         return mView;
+    }
+
+    private void loadData() {
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        selectedTime = sharedPreferences.getString(SELECTED_TIME, "Pick Time");
     }
 
     private void createNotificationChannel() {
@@ -115,13 +127,15 @@ public class TabFragment1 extends Fragment {
             public void onClick(View view) {
 
                 if(mTimePicker.getHour() > 12) {
+                    selectedTime = String.format("%02d",(mTimePicker.getHour()-12)) + ":" + String.format("%02d",mTimePicker.getMinute()) + " PM";
                     mSelectedTime.setText(
-                            String.format("%02d",(mTimePicker.getHour()-12)) + ":" + String.format("%02d",mTimePicker.getMinute()) + " PM"
+                            selectedTime
                     );
                 } else {
-                    mSelectedTime.setText(mTimePicker.getHour() + ":" + mTimePicker.getMinute() + " PM");
+                    selectedTime = mTimePicker.getHour() + ":" + mTimePicker.getMinute() + " PM";
+                    mSelectedTime.setText(selectedTime);
                 }
-
+                saveData();
                 mCalendar = Calendar.getInstance();
                 mCalendar.set(Calendar.HOUR_OF_DAY, mTimePicker.getHour());
                 mCalendar.set(Calendar.MINUTE, mTimePicker.getMinute());
@@ -129,6 +143,15 @@ public class TabFragment1 extends Fragment {
                 mCalendar.set(Calendar.MILLISECOND, 0);
             }
         });
+    }
+
+    private void saveData() {
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(SELECTED_TIME, selectedTime);
+
+        editor.apply();
     }
 }
 
