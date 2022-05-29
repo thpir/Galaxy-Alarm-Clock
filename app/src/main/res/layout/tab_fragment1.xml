@@ -1,15 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:id="@+id/tabFragment1"
+    android:gravity="center"
     tools:context=".TabFragment1">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Alarm" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textviewSelectedTime"
+        android:text="00:00 PM"
+        android:textSize="60sp"
+        android:textColor="@color/black"/>
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/buttonSelectTime"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:text="Select Time"
+        android:background="@color/teal_700"/>
+
+    <Button
+        android:id="@+id/buttonSetAlarm"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:text="Set Alarm"
+        android:background="@color/teal_700"/>
+
+    <Button
+        android:id="@+id/buttonCancelAlarm"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:text="Cancel Alarm"
+        android:background="@color/teal_700"/>
+
+</LinearLayout>

@@ -25,6 +25,11 @@
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/layout/tab_fragment3.xml" value="0.25" />
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/menu/menu_main.xml" value="0.1" />
         <entry key="..\:/Users/ThijsPirmez/AndroidStudioProjects/Galaxy Alarm Clock/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.32" />
+        <entry key="app/src/main/res/drawable/icon_delete.xml" value="0.287" />
+        <entry key="app/src/main/res/drawable/icon_play.xml" value="0.287" />
+        <entry key="app/src/main/res/layout/activity_alarm.xml" value="0.2984375" />
+        <entry key="app/src/main/res/layout/tab_fragment1.xml" value="0.2984375" />
+        <entry key="app/src/main/res/layout/tab_fragment2.xml" value="0.2984375" />
       </map>
     </option>
   </component>
