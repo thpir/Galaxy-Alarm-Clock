@@ -1,37 +1,31 @@
 package com.example.galaxyalarmclock;
 
 import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.TimePicker;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.timepicker.MaterialTimePicker;
-import com.google.android.material.timepicker.TimeFormat;
-
+import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Objects;
 
-public class TabFragment1 extends Fragment {
+public class TabFragment1 extends Fragment implements TimePickerDialog.OnTimeSetListener {
 
     private View mView;
-    private Button mSetTime, mSetAlarm, mCancelAlarm;
-    private MaterialTimePicker mTimePicker;
+    private Button mSetAlarm, mCancelAlarm;
     private TextView mSelectedTime;
-    private Calendar mCalendar;
-    private AlarmManager mAlarmManager;
-    private PendingIntent mPendingIntent;
     private String selectedTime;
 
     public static final String SHARED_PREFS = "sharedPrefs";
@@ -43,41 +37,15 @@ public class TabFragment1 extends Fragment {
         // Inflate the layout for this fragment
         loadData();
         mView = inflater.inflate(R.layout.tab_fragment1, container, false);
-        mSetTime = (Button) mView.findViewById(R.id.buttonSelectTime);
         mSetAlarm = (Button) mView.findViewById(R.id.buttonSetAlarm);
         mCancelAlarm = (Button) mView.findViewById(R.id.buttonCancelAlarm);
         mSelectedTime = (TextView) mView.findViewById(R.id.textviewSelectedTime);
         mSelectedTime.setText(selectedTime);
-        createNotificationChannel();
         configureButtons();
         return mView;
     }
 
-    private void loadData() {
-        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-        selectedTime = sharedPreferences.getString(SELECTED_TIME, "Pick Time");
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "GalaxyAlarmClockChannel";
-            String description = "Channel For Alarm Manager";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("GalaxyAlarmClock", name, importance);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
     private void configureButtons() {
-        mSetTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimePicker();
-            }
-        });
 
         mSetAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,59 +58,14 @@ public class TabFragment1 extends Fragment {
         });
     }
 
-    private void cancelAlarm() {
-
-        Intent intent = new Intent(getActivity(), AlarmReceiver.class);
-        mPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
-        if (mAlarmManager == null) {
-            mAlarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        }
-        mAlarmManager.cancel(mPendingIntent);
-        Toast.makeText(getActivity(), "Alarm Cancelled", Toast.LENGTH_SHORT).show();
-    }
-
     private void setAlarm() {
-
-        mAlarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), AlarmReceiver.class);
-        mPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
-        mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,mCalendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY,mPendingIntent);
-        Toast.makeText(getActivity(), "Alarm Set Successfully", Toast.LENGTH_SHORT).show();
+        DialogFragment timePicker = new TimePickerFragment();
+        timePicker.show(getChildFragmentManager(), "time picker");
     }
 
-    private void showTimePicker() {
-
-        mTimePicker = new MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_12H)
-                .setHour(12)
-                .setMinute(0)
-                .setTitleText("Select Alarm Time")
-                .build();
-
-        mTimePicker.show(getParentFragmentManager(), "GalaxyAlarmClock");
-
-        mTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if(mTimePicker.getHour() > 12) {
-                    selectedTime = String.format("%02d",(mTimePicker.getHour()-12)) + ":" + String.format("%02d",mTimePicker.getMinute()) + " PM";
-                    mSelectedTime.setText(
-                            selectedTime
-                    );
-                } else {
-                    selectedTime = mTimePicker.getHour() + ":" + mTimePicker.getMinute() + " PM";
-                    mSelectedTime.setText(selectedTime);
-                }
-                saveData();
-                mCalendar = Calendar.getInstance();
-                mCalendar.set(Calendar.HOUR_OF_DAY, mTimePicker.getHour());
-                mCalendar.set(Calendar.MINUTE, mTimePicker.getMinute());
-                mCalendar.set(Calendar.SECOND, 0);
-                mCalendar.set(Calendar.MILLISECOND, 0);
-            }
-        });
+    private void loadData() {
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        selectedTime = sharedPreferences.getString(SELECTED_TIME, "Pick Time");
     }
 
     private void saveData() {
@@ -152,6 +75,47 @@ public class TabFragment1 extends Fragment {
         editor.putString(SELECTED_TIME, selectedTime);
 
         editor.apply();
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        // When we set a time of day, those values will be directly send to this fragment over this method
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.SECOND, 0);
+        updateTimeText(c);
+        startAlarm(c);
+        saveData();
+    }
+
+    private void updateTimeText(Calendar c) {
+        selectedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+        mSelectedTime.setText(selectedTime);
+        saveData();
+    }
+
+    private void startAlarm(Calendar c) {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intent, 0);
+        // If the selected time is set in the past, we will set the time for the next day
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+    }
+
+    private void cancelAlarm() {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intent, 0);
+
+        alarmManager.cancel(pendingIntent);
+        selectedTime = "No Alarm Set";
+        mSelectedTime.setText(selectedTime);
+        saveData();
     }
 }
 

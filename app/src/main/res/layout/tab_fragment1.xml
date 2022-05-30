@@ -12,17 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textviewSelectedTime"
-        android:text="00:00 PM"
+        android:text="No Alarm Set"
         android:textSize="60sp"
         android:textColor="@color/black"/>
-
-    <Button
-        android:id="@+id/buttonSelectTime"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_margin="5dp"
-        android:text="Select Time"
-        android:background="@color/teal_700"/>
 
     <Button
         android:id="@+id/buttonSetAlarm"

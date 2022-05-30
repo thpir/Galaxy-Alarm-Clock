@@ -11,21 +11,8 @@ import androidx.core.app.NotificationManagerCompat;
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        Intent i = new Intent(context,AlarmActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "GalaxyAlarmClock")
-                .setSmallIcon(R.drawable.icon_alarm)
-                .setContentTitle("Galaxy Alarm Clock")
-                .setContentText("It's Time To Rise And Shine!")
-                .setAutoCancel(true)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent);
-
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-        notificationManagerCompat.notify(123,builder.build());
+        NotificationHelper notificationHelper = new NotificationHelper(context);
+        NotificationCompat.Builder notificationBuilder = notificationHelper.getChannel1Notification("Galaxy Alarm Clock", "Alarm");
+        notificationHelper.getManager().notify(1, notificationBuilder.build());
     }
 }
