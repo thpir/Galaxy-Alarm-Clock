@@ -10,4 +10,7 @@
     <string name="tab_label2">Stopwatch</string>
     <string name="tab_label3">Timer</string>
     <string name="switch2_text">Keep the screen on</string>
+    <string name="title_activity_alarm">AlarmActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

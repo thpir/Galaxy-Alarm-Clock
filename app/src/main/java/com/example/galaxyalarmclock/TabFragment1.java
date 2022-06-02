@@ -3,6 +3,7 @@ package com.example.galaxyalarmclock;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -97,8 +98,8 @@ public class TabFragment1 extends Fragment implements TimePickerDialog.OnTimeSet
 
     private void startAlarm(Calendar c) {
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intent, 0);
+        Intent intentAlarmReceiver = new Intent(getActivity(), AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intentAlarmReceiver, 0);
         // If the selected time is set in the past, we will set the time for the next day
         if (c.before(Calendar.getInstance())) {
             c.add(Calendar.DATE, 1);
@@ -117,5 +118,7 @@ public class TabFragment1 extends Fragment implements TimePickerDialog.OnTimeSet
         mSelectedTime.setText(selectedTime);
         saveData();
     }
+
+
 }
 
