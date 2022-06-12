@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        //log no° of button clicks for single/double click feature
+        // Implement click actions. Long click to go to the toolsActivity, short click to inform the user what to do...
         button = findViewById(R.id.backgroundChange);
 
         button.setOnLongClickListener(new View.OnLongClickListener() {
@@ -104,11 +104,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Inform user to tap the background when they want to change the background image
+                Toast.makeText(getApplication(), "Long click on anywhere on screen to open settings", Toast.LENGTH_LONG).show();
+            }
+        });
+
         //Inform user to tap the background when they want to change the background image
         Toast.makeText(getApplication(), "Long click on anywhere on screen to open settings", Toast.LENGTH_LONG).show();
     }
 
-    // Request for permission to open an activity when app is closed. (SYSTEM_ALERT_WINDOW)
+    // Request for overlay permission to open an activity when app is closed/working in the background. (SYSTEM_ALERT_WINDOW)
     private void RequestPermission() {
         // Check if Android M or higher
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -120,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // to inform user if SYSTEM_ALERT_WINDOW is permitted or denied
+    // to inform user if SYSTEM_ALERT_WINDOW is permitted or denied, if not the alarmActivity will not show when the app is closed/in the background
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -129,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.canDrawOverlays(this)) {
                     // Permission Denied
+                    Toast.makeText(getApplication(), "Overlay Permission is denied, alarm might not function properly", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
