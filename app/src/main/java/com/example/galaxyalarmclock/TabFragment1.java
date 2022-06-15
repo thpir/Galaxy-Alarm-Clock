@@ -99,7 +99,7 @@ public class TabFragment1 extends Fragment implements TimePickerDialog.OnTimeSet
     private void startAlarm(Calendar c) {
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         Intent intentAlarmReceiver = new Intent(getActivity(), AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intentAlarmReceiver, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intentAlarmReceiver, PendingIntent.FLAG_IMMUTABLE);
         // If the selected time is set in the past, we will set the time for the next day
         if (c.before(Calendar.getInstance())) {
             c.add(Calendar.DATE, 1);
@@ -111,7 +111,7 @@ public class TabFragment1 extends Fragment implements TimePickerDialog.OnTimeSet
     private void cancelAlarm() {
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getActivity(), AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_IMMUTABLE);
 
         alarmManager.cancel(pendingIntent);
         selectedTime = "No Alarm Set";
