@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openToolsActivity() {
-        Intent intent = new Intent(this, ToolsActivity.class);
+        Intent intent = new Intent(this, ToolActivity.class);
         startActivity(intent);
     }
 }

@@ -3,7 +3,6 @@ package com.example.galaxyalarmclock;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,17 +19,22 @@ import androidx.fragment.app.Fragment;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Objects;
 
 public class TabFragment1 extends Fragment implements TimePickerDialog.OnTimeSetListener {
 
     private View mView;
     private Button mSetAlarm, mCancelAlarm;
     private TextView mSelectedTime;
-    private String selectedTime;
+    //private String selectedTime;
+    private boolean mAlarmOn;
+    private int mHourOfDay;
+    private int mMinuteOfDay;
 
     public static final String SHARED_PREFS = "sharedPrefs";
-    public static final String SELECTED_TIME = "selectedTime";
+    //public static final String SELECTED_TIME = "selectedTime";
+    public static final String ALARM_ON = "alarmOn";
+    public static final String HOUR_OF_DAY = "hourOfDay";
+    public static final String MINUTE_OF_DAY = "minuteOfDay";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,9 +43,15 @@ public class TabFragment1 extends Fragment implements TimePickerDialog.OnTimeSet
         loadData();
         mView = inflater.inflate(R.layout.tab_fragment1, container, false);
         mSetAlarm = (Button) mView.findViewById(R.id.buttonSetAlarm);
-        mCancelAlarm = (Button) mView.findViewById(R.id.buttonCancelAlarm);
+        //mCancelAlarm = (Button) mView.findViewById(R.id.buttonCancelAlarm);
         mSelectedTime = (TextView) mView.findViewById(R.id.textviewSelectedTime);
-        mSelectedTime.setText(selectedTime);
+        if (mAlarmOn) {
+            mSelectedTime.setText(mHourOfDay + ":" + mMinuteOfDay);
+            mSetAlarm.setText("Cancel Alarm");
+        } else {
+            mSelectedTime.setText("No Alarm");
+            mSetAlarm.setText("Set Alarm");
+        }
         configureButtons();
         return mView;
     }
@@ -50,13 +60,20 @@ public class TabFragment1 extends Fragment implements TimePickerDialog.OnTimeSet
 
         mSetAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { setAlarm(); }
+            public void onClick(View view) {
+                if (!mAlarmOn) {
+                    setAlarm();
+                } else {
+                    cancelAlarm();
+                    mSetAlarm.setText("Set Alarm");
+                }
+            }
         });
 
-        mCancelAlarm.setOnClickListener(new View.OnClickListener() {
+        /*mCancelAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) { cancelAlarm(); }
-        });
+        });*/
     }
 
     private void setAlarm() {
@@ -66,14 +83,20 @@ public class TabFragment1 extends Fragment implements TimePickerDialog.OnTimeSet
 
     private void loadData() {
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-        selectedTime = sharedPreferences.getString(SELECTED_TIME, "Pick Time");
+        //selectedTime = sharedPreferences.getString(SELECTED_TIME, "Pick Time");
+        mHourOfDay = sharedPreferences.getInt(HOUR_OF_DAY, 1);
+        mMinuteOfDay = sharedPreferences.getInt(MINUTE_OF_DAY, 1);
+        mAlarmOn = sharedPreferences.getBoolean(ALARM_ON, false);
     }
 
     private void saveData() {
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(SELECTED_TIME, selectedTime);
+        //editor.putString(SELECTED_TIME, selectedTime);
+        editor.putInt(HOUR_OF_DAY, mHourOfDay);
+        editor.putInt(MINUTE_OF_DAY, mMinuteOfDay);
+        editor.putBoolean(ALARM_ON, mAlarmOn);
 
         editor.apply();
     }
@@ -85,15 +108,18 @@ public class TabFragment1 extends Fragment implements TimePickerDialog.OnTimeSet
         c.set(Calendar.HOUR_OF_DAY, hourOfDay);
         c.set(Calendar.MINUTE, minute);
         c.set(Calendar.SECOND, 0);
+        mHourOfDay = hourOfDay;
+        mMinuteOfDay = minute;
         updateTimeText(c);
+        mSetAlarm.setText("Cancel Alarm");
         startAlarm(c);
         saveData();
     }
 
     private void updateTimeText(Calendar c) {
-        selectedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
-        mSelectedTime.setText(selectedTime);
-        saveData();
+        //selectedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+        mSelectedTime.setText(mHourOfDay + ":" + mMinuteOfDay);
+        //saveData();
     }
 
     private void startAlarm(Calendar c) {
@@ -106,6 +132,7 @@ public class TabFragment1 extends Fragment implements TimePickerDialog.OnTimeSet
         }
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        mAlarmOn = true;
     }
 
     private void cancelAlarm() {
@@ -114,8 +141,9 @@ public class TabFragment1 extends Fragment implements TimePickerDialog.OnTimeSet
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_IMMUTABLE);
 
         alarmManager.cancel(pendingIntent);
-        selectedTime = "No Alarm Set";
-        mSelectedTime.setText(selectedTime);
+        //selectedTime = "No Alarm Set";
+        mSelectedTime.setText("No Alarm");
+        mAlarmOn = false;
         saveData();
     }
 
